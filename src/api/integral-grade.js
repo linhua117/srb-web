@@ -15,11 +15,11 @@ export function del(params) {
   })
 }
 
-export function add(data) {
+export function add(data) { 
   return request({
     url: `/admin/core/integralGrade`,
     method: 'post',
-    data:data
+    data
   })
 }
 
