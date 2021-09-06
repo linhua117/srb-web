@@ -17,7 +17,7 @@ export function del(params) {
 
 export function add(data) {
   return request({
-    url: `/admin/core/integralGrade/save`,
+    url: `/admin/core/integralGrade`,
     method: 'post',
     data:data
   })
@@ -26,7 +26,7 @@ export function add(data) {
 export function update(data) {
   return request({
     url: `/admin/core/integralGrade`,
-    method:'post',
+    method:'put',
     data
   })
 }

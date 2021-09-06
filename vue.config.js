@@ -43,6 +43,16 @@ module.exports = {
         //target: 'http://192.168.16.126:9000/api/',
         //target: 'http://39.98.232.0:8090/map/',
         changeOrigin: true,
+        onProxyReq:function (proxyReq, req, res, options) {
+          if (req.body) {
+            let bodyData = JSON.stringify(req.body);
+            // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+            proxyReq.setHeader('Content-Type','application/json');
+            proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+            // stream the content
+            proxyReq.write(bodyData);
+          }
+        },
         ws: true,
         pathRewrite: {
           '^/api/admin': ''
