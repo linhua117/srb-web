@@ -7,7 +7,7 @@
           <template slot="prepend">借款额度</template>
         </el-input>
         <el-button type="primary" size="small" @click="getList" icon="el-icon-search">搜索</el-button>
-        <el-button type="primary" size="small" @click="getList" icon="el-icon-plus">新增</el-button>
+        <el-button type="primary" size="small" @click="AddPopup = true" icon="el-icon-plus">新增</el-button>
       </div>
       <div class="table-box">
         <div class="table-content">
@@ -23,8 +23,8 @@
             <el-table-column prop="address" label="操作" width="180">
               <template slot-scope="scope">
                 <el-button size="mini" type="primary" :data="scope" class="mini-btn"
-                  @click="LogPopup = scope.row.logId">修改</el-button>
-                <el-button type="danger" size="mini" class="mini-btn" @click="exportDelete(scope.$index, scope.row)">删除
+                  @click="AddPopup = scope.row">修改</el-button>
+                <el-button type="danger" size="mini" class="mini-btn" @click="exportDelete(scope.row.id)">删除
                 </el-button>
               </template>
             </el-table-column>
@@ -38,13 +38,19 @@
         </el-pagination>
       </div>
     </div>
+    <transition name="el-fade-in-linear">
+      <AddPopup v-if="AddPopup" busName="AddPopup" @close="AddPopup=false" :Data="AddPopup">
+      </AddPopup>
+    </transition>
   </div>
 </template>
 
 <script>
   import {
-    getList
+    list,
+    del
   } from '@/api/integral-grade'
+  import AddPopup from "./components/AddPopup"
   export default {
     name: "integral-grade",
     data() {
@@ -56,7 +62,8 @@
         pageNo: 1,
         search: {
           borrowAmount: ""
-        }
+        },
+        AddPopup: false
       };
     },
     created() {
@@ -64,7 +71,7 @@
     },
     methods: {
       getList() {
-        getList({
+        list({
           current: this.pageNo,
           size: this.activeSize,
           borrowAmount: this.search.borrowAmount
@@ -77,6 +84,26 @@
           this.tableData = data.list;
         })
       },
+      exportDelete(id) {
+        this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          del(id).then(_ => {
+            this.$message({
+              message: "删除成功！",
+              type: "success"
+            });
+            if (this.tableData.length == 1 && this.pageNo > 1) {
+              --this.pageNo
+            }
+            this.getList();
+          }).catch(_ => {
+            this.$message.error(_.message);
+          })
+        }).catch(_ => {})
+      },
       handleCurrentChange(val) {
         this.pageNo = val;
         this.getList();
@@ -87,6 +114,9 @@
         this.activeSize = val;
         this.getList();
       }
+    },
+    components: {
+      AddPopup
     }
   }
 
