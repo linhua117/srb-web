@@ -52,7 +52,7 @@
   } from '@/api/integral-grade'
   import AddPopup from "./components/AddPopup"
   export default {
-    name: "integral-grade",
+    name: "coreIntegralGrade",
     data() {
       return {
         tableData: [],

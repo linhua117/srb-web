@@ -52,7 +52,7 @@ export const constantRoutes = [{
       component: () => import('@/views/dashboard/index'),
       meta: {
         title: '首页',
-        icon: 'dashboard'
+        icon: 'el-icon-data-board'
       }
     }]
   }
@@ -63,16 +63,33 @@ export const constantRoutes = [{
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [{
-    path: '/',
+    path: '/integral-grade',
     component: Layout,
-    require:"/integral-grade",
+    redirect: "/integral-grade/list",
     children: [{
       path: 'list',
-      name: 'coreIntegralGradeList',
+      name: 'coreIntegralGrade',
       component: () => import('@/views/integral-grade/'),
       meta: {
         title: '积分等级管理',
         icon: 'el-icon-s-marketing'
+      }
+    }]
+  }, {
+    path: "/sys",
+    component: Layout,
+    redirect: "/sys/dictionary",
+    alwaysShow: true,
+    meta: {
+      title: '系统设置',
+      icon: 'el-icon-setting'
+    },
+    children: [{
+      path: 'dictionary',
+      name: 'sysDictionary',
+      component: () => import('@/views/sys/dictionary'),
+      meta: {
+        title: '数据字典'
       }
     }]
   },
