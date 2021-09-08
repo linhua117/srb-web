@@ -48,7 +48,9 @@
       fileUploadSuccess(response) {
         if (response.code === 0) {
           this.$message.success('数据导入成功')
-          this.dialogVisible = false
+          this.$emit('close');
+          this.$parent.getList();
+          if(this.$parent.activeMenu.id) this.$parent.getList(this.$parent.activeMenu.id);
         } else {
           this.$message.error(response.message)
         }

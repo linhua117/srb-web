@@ -8,8 +8,8 @@
               <p>字典类型</p>
               <div class="btn">
                 <div class="el-icon-document-add" @click="AddPopup=true"></div>
-                <div class="el-icon-download" title="导出"></div>
-                <div class="el-icon-upload2" title="导入"></div>
+                <div class="el-icon-download" title="导出" @click="exportData"></div>
+                <div class="el-icon-upload2" title="导入" @click="Upload=true"></div>
               </div>
             </div>
             <!-- <div class="content">
@@ -69,7 +69,7 @@
       </AddPopup>
       <AddPopupFind v-if="AddPopupFind" busName="AddPopup" @close="AddPopupFind=false" :Data="AddPopupFind">
       </AddPopupFind>
-      <Upload></Upload>
+      <Upload v-if="Upload" @close="Upload=false"></Upload>
     </transition>
   </div>
 </template>
@@ -91,6 +91,8 @@
         treeDataFind: [],
         AddPopup: false,
         AddPopupFind: false,
+        Upload: false,
+        BASE_API: process.env.VUE_APP_BASE_API,
         activeMenu: {}
       };
     },
@@ -137,17 +139,19 @@
             if (t) {
               this.getList(this.activeMenu.id);
             } else {
-              if(id == this.activeMenu.id){
+              if (id == this.activeMenu.id) {
                 this.activeMenu = {};
                 this.treeDataFind = [];
-              }else{
-                this.getList();
               }
+              this.getList();
             }
           }).catch(_ => {
             this.$message.error(_.message);
           })
         }).catch(_ => {})
+      },
+      exportData() {
+        window.location.href = this.BASE_API + '/admin/sys/dic/export'
       }
     },
     components: {
