@@ -44,7 +44,8 @@ module.exports = {
         //target: 'http://39.98.232.0:8090/map/',
         changeOrigin: true,
         onProxyReq:function (proxyReq, req, res, options) {
-          if (req.body) {
+          if (req.body&&JSON.stringify(req.body) != "{}") {
+            //console.log(req.body)
             let bodyData = JSON.stringify(req.body);
             // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
             proxyReq.setHeader('Content-Type','application/json');

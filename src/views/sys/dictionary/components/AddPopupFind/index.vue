@@ -2,15 +2,18 @@
   <PopupBox @close="$emit('close')" :Title="this.Data != true?'编辑':'添加'" Width="80vh">
     <div class="GroupPopup" slot="content">
       <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="form-box">
-        <el-form-item label="字典名称" prop="name"
+        <el-form-item label="字典类别" prop="name">
+          <el-input disabled :maxlength="100" size="small" placeholder="请输入字典名称"  v-model="this.$parent.activeMenu.name"></el-input>
+        </el-form-item>
+        <el-form-item label="条目名称" prop="name"
           :rules="[{required: true,message:'请输入字典名称',trigger:'blur'}]">
           <el-input :maxlength="100" size="small" placeholder="请输入字典名称"
             v-model="ruleForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="字典编码" prop="dictCode"
+        <el-form-item label="值" prop="value"
           :rules="[{required: true,message:'请输入字典编码',trigger:'blur'}]">
-          <el-input :maxlength="100" size="small" placeholder="请输入字典编码"
-            v-model="ruleForm.dictCode"></el-input>
+          <el-input :maxlength="100" size="small" type="number" placeholder="请输入字典编码"
+            v-model.number="ruleForm.value"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -28,14 +31,14 @@
   } from '@/api/dic'
   import PopupBox from "@/components/PopupBox"
   export default {
-    name: "AddPopup",
+    name: "AddPopupFind",
     props: ["Data"],
     data() {
       return {
         ruleForm: {
-          parentId: 1,
+          parentId: this.$parent.activeMenu.id,
           name: "",
-          dictCode: ""
+          value: ""
         }
       }
     },
@@ -72,7 +75,7 @@
 									type: "success"
 								});
 								//this.Bus.$emit(this.busName);
-                this.$parent.getList();
+                this.$parent.getList(this.ruleForm.parentId);
                 this.$emit('close');
 							}).catch(_ => {
 								this.$message.error(_.message);
@@ -83,7 +86,7 @@
 									message: "添加成功！",
 									type: "success"
 								});
-                this.$parent.getList();
+                this.$parent.getList(this.ruleForm.parentId);
 								this.$emit('close');
 							}).catch(_ => {
 								this.$message.error(_.message);
